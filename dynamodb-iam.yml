@@ -56,6 +56,10 @@ Resources:
                 Resource:
                   - !GetAtt FoodOrdersTable.Arn
                   - !GetAtt FoodItemsTable.Arn
+              - Effect: Allow
+                Action:
+                  - ec2:*
+                Resource: '*'               
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Path: "/"

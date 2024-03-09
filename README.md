@@ -19,17 +19,19 @@ cd aws-serverless-workshop (or open the folder on VS code)
 """
 
 2. Deploy AWS Databases and Roles
-"""
+```
 aws cloudformation create-stack --stack-name FoodApp --template-body file://dynamodb-iam.yml --capabilities CAPABILITY_IAM --capabilities CAPABILITY_NAMED_IAM --region us-east-1
-"""
+```
 
 3. Insert items in the DynamoDB table
-"""
+```
 aws dynamodb batch-write-item --request-items file://food-items.json --region us-east-1
-"""
+```
 
 4. Create lambda functions
 
 5. Integrate with API Gateway
 
 6. Test with Postman
+
+7. For the scheduler create a Rule under EventBridge
