@@ -1,0 +1,104 @@
+{
+  "FoodItems": [
+    {
+      "PutRequest": {
+        "Item": {
+          "FoodItemId": { "S": "1" },
+          "Name": { "S": "Pizza" },
+          "Description": { "S": "Classic Margherita Pizza" },
+          "Price": { "S": "12.00" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "FoodItemId": { "S": "2" },
+          "Name": { "S": "Burger" },
+          "Description": { "S": "Juicy Beef Burger with Cheese" },
+          "Price": { "S": "9.50" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "FoodItemId": { "S": "3" },
+          "Name": { "S": "Sushi" },
+          "Description": { "S": "Fresh Salmon Sushi Set" },
+          "Price": { "S": "15.00" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "FoodItemId": { "S": "4" },
+          "Name": { "S": "Pasta Carbonara" },
+          "Description": { "S": "Creamy Pasta with Pancetta" },
+          "Price": { "S": "11.00" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "FoodItemId": { "S": "5" },
+          "Name": { "S": "Tacos" },
+          "Description": { "S": "Spicy Chicken Tacos" },
+          "Price": { "S": "8.00" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "FoodItemId": { "S": "6" },
+          "Name": { "S": "Caesar Salad" },
+          "Description": { "S": "Classic Caesar Salad with Croutons" },
+          "Price": { "S": "7.00" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "FoodItemId": { "S": "7" },
+          "Name": { "S": "Falafel Wrap" },
+          "Description": { "S": "Middle Eastern Falafel Wrap" },
+          "Price": { "S": "6.50" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "FoodItemId": { "S": "8" },
+          "Name": { "S": "Chicken Curry" },
+          "Description": { "S": "Rich and Creamy Chicken Curry" },
+          "Price": { "S": "10.00" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "FoodItemId": { "S": "9" },
+          "Name": { "S": "Lamb Gyro" },
+          "Description": { "S": "Grilled Lamb Gyro with Tzatziki Sauce" },
+          "Price": { "S": "13.00" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "FoodItemId": { "S": "10" },
+          "Name": { "S": "Cheesecake" },
+          "Description": { "S": "New York Style Cheesecake" },
+          "Price": { "S": "5.00" }
+        }
+      }
+    }
+  ]
+}
