@@ -12,11 +12,11 @@ Before you begin, ensure you have the following prerequisites met:
 
 1. Clone the repo
 
-"""
+```
 git clone https://github.com/cvamsikrishna11/aws-serverless-workshop.git
 
 cd aws-serverless-workshop (or open the folder on VS code)
-"""
+```
 
 2. Deploy AWS Databases and Roles
 ```
