@@ -1,0 +1,145 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: A CloudFormation template to create DynamoDB tables for food orders and food items, and an IAM role for Lambda with necessary permissions.
+
+Resources:
+  FoodOrdersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: FoodOrders
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: OrderId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: OrderId
+          KeyType: HASH
+      SSESpecification:
+        SSEEnabled: true
+
+  FoodItemsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: FoodItems
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: FoodItemId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: FoodItemId
+          KeyType: HASH
+      SSESpecification:
+        SSEEnabled: true
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "FoodApp-Role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaDynamoDBPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:Scan
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                Resource:
+                  - !GetAtt FoodOrdersTable.Arn
+                  - !GetAtt FoodItemsTable.Arn
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Path: "/"
+
+  GetFoodItemDetailsLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: get-food-item-details
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: python3.9
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          
+          dynamodb = boto3.resource('dynamodb')
+          
+          def lambda_handler(event, context):
+              print("Event:", event)
+              table_name = 'FoodItems'
+              print("Using table:", table_name)
+              table = dynamodb.Table(table_name)
+              food_id = event['queryStringParameters']['id']
+              print("Fetching item with ID:", food_id)
+              response = table.get_item(Key={'FoodItemId': food_id})
+              print("DynamoDB Response:", response)
+              if 'Item' in response:
+                  return {'statusCode': 200, 'body': json.dumps(response['Item'])}
+              else:
+                  return {'statusCode': 404, 'body': json.dumps({'error': 'Item not found'})}
+
+  OrderFoodLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: order-food
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: python3.9
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import uuid
+          
+          dynamodb = boto3.resource('dynamodb')
+          
+          def lambda_handler(event, context):
+              print("Event:", event)
+              table_name = 'FoodOrders'
+              print("Using table:", table_name)
+              table = dynamodb.Table(table_name)
+              payload = json.loads(event['body'])
+              order_id = str(uuid.uuid4())
+              item = {
+                  'OrderId': order_id,
+                  'FoodItemId': payload['FoodItemId'],
+                  'Price': payload['Price'],
+                  'Address': payload['Address'],
+                  'Phone': payload['Phone'],
+                  'Email': payload['Email']
+              }
+              response = table.put_item(Item=item)
+              return {'statusCode': 200, 'body': json.dumps({'message': 'Order placed successfully', 'OrderId': order_id})}
+
+  DeleteUnusedVolumesLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: delete-unused-volumes
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: python3.9
+      Code:
+        ZipFile: |
+          import boto3
+          
+          client = boto3.client("ec2")
+          
+          def lambda_handler(event, context):
+              response = client.describe_volumes(
+                  Filters=[{'Name': 'status', 'Values': ['available']}]
+              )
+              print("Available Volumes Response: ", response)
+              for i in response["Volumes"]:
+                  print("Deleting Volume with ID ::::::::::::::::::::::::::", i["VolumeId"])
+                  response = client.delete_volume(VolumeId=i["VolumeId"])
+                  print(response)

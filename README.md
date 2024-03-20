@@ -20,7 +20,7 @@ cd aws-serverless-workshop (or open the folder on VS code)
 
 2. Deploy AWS Databases and Roles
 ```
-aws cloudformation create-stack --stack-name FoodApp --template-body file://dynamodb-iam.yml --capabilities CAPABILITY_IAM --capabilities CAPABILITY_NAMED_IAM --region us-east-1
+aws cloudformation create-stack --stack-name FoodApp --template-body file://app-infra.yml --capabilities CAPABILITY_IAM --capabilities CAPABILITY_NAMED_IAM --region us-east-1
 ```
 
 3. Insert items in the DynamoDB table
